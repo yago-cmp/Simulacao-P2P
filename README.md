@@ -1,4 +1,4 @@
-# SIMULAÇÃO FREECHAINS
+# Simulação Freechains
 
 ## Propósito
 ***
