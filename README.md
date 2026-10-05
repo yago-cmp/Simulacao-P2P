@@ -12,3 +12,16 @@ Teremos **diversos pares** e diversos usuários por par. A ideia é fazer o uso 
 Cada um dos usuários a seguir interpretam um tipo, um arquétipo de personagem. O objetivo é ilustrar como usuários de diferentes personalidades, índoles e propósitos na rede interagem entre si e como ela como um todo reage a essa situação. A chain criada se chama `#videos`.
 
 Abaixo estão relacionados os usuários, sua data de ingresso e seu perfil geral (como eles se comportam na rede).
+
+| Nome               | Data  | Comportamento            |
+| ------------------ | ----- | ------------------------ |
+| Almirante Adama    | 01/01 | **Pioneiro**, Hard User  |
+| Presidente Roslin  | 01/01 | **Pioneira**, Soft User  |
+| Isaac Asimov       | 03/01 | Hard User, Isolado       |
+| James Kirk         | 18/01 | Regular, Generoso        |
+| Spock              | 27/01 | Avarento                 |
+| Padre Paul         | 03/02 | **Malicioso**, Enganador |
+| Anakin Skywalker   | 08/02 | Volátil, **Malicioso**   |
+| Chrisjen Avasarala | 06/03 | Free Rider               |
+
+Adama e Roslin criaram a `#videos` juntos no dia 01/01. Chamaram para a rede, enviando os seus IPs, seu amigo Asimov. Kirk é amigo de longa data de Asimov, e foi por ele indicado para entrar na rede. Spock, a contragosto, entrou na rede a pedido de Kirk, para que ele possa compartilhar seus vídeos. Com inveja do sucesso da rede, Paul tentou posar como um usuário legítimo e fez um beg, mas pouco tempo depois, teve seus posts revogados por espalhar spam. Anakin era conhecido por todos, e por uma ação de graça, Roslin o aceitou na rede. Anakin nunca foi muito confiável, e depois de um certo tempo passou a compartilhar links para conteúdos maliciosos. Avasarala é louca por assistir vídeos de gatos, mas ela em si não é muito chegada a compartilhar sua coleção pessoal. Ela entrou na rede fazendo um beg com um de seus favoritos, depois de muita incerteza se devia compartilhá-lo ou não.
