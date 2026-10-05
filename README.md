@@ -1,4 +1,4 @@
-# ‼ Não Finalizado ‼
+# Não Finalizado ⚠
 # Simulação Freechains
 
 ## Propósito
