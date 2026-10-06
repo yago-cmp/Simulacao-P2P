@@ -16,7 +16,7 @@ Abaixo estão relacionados os usuários, sua data de ingresso e seu perfil geral
 | Nome               | Data  | Comportamento            |
 | ------------------ | ----- | ------------------------ |
 | Almirante Adama    | 01/01 | **Pioneiro**, Hard User  |
-| Presidente Roslin  | 01/01 | **Pioneira**, Soft User  |
+| Presidente Roslin  | 01/01 | Soft User                |
 | Isaac Asimov       | 03/01 | Hard User, Isolado       |
 | James Kirk         | 18/01 | Regular, Generoso        |
 | Spock              | 27/01 | Avarento                 |
