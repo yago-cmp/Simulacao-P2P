@@ -137,8 +137,8 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 #adama faz um post -- ALTERAR CONTEUDO!!
 freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama"
 
-# asimov dá um dislike no post de adama, pois o link está quebrado
-freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' dislike 500 action "$POST_ADAMA" --sign="$SIM/A/chaves/asimov" 
+# asimov dá um like no post de roslin
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 500 action "$POST_ROSLIN" --sign="$SIM/A/chaves/asimov" 
 
 # --- [18/01] ---
 freechains --now="$TEMPO" --root="$SIM/B/" chains add '#videos' clone localhost:8330 # peer B inicia a chain localmente
