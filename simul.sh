@@ -27,9 +27,9 @@ mkdir -p "$SIM/A/chains" # cria as pastas base /chains para o daemon iniciar
 mkdir -p "$SIM/B/chains"
 mkdir -p "$SIM/C/chains"
 
-freechains --root="$SIM/A/" daemon start --port=8330 --hub & # inicia os 3 peers no background (&)
-freechains --root="$SIM/B/" daemon start --port=8331 --hub & # e define os diretorios de cada um
-freechains --root="$SIM/C/" daemon start --port=8332 --hub &
+#freechains --root="$SIM/A/" daemon start --port=8330 --hub & # inicia os 3 peers no background (&)
+#freechains --root="$SIM/B/" daemon start --port=8331 --hub & # e define os diretorios de cada um
+#freechains --root="$SIM/C/" daemon start --port=8332 --hub &
 
 # fazer SIM="$HOME/simulacao" no terminal individual, para rodar sem o script, é necessario!!
 
@@ -140,11 +140,449 @@ freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titul
 # asimov dá um like no post de roslin
 freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 500 action "$POST_ROSLIN" --sign="$SIM/A/chaves/asimov" 
 
-# --- [18/01] ---
-freechains --now="$TEMPO" --root="$SIM/B/" chains add '#videos' clone localhost:8330 # peer B inicia a chain localmente
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [12/01] ---
 
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [13/01] ---
+
+#asimov faz um post -- ALTERAR CONTEUDO
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov"
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [14/01] ---
+
+# roslin faz um post -- ALTERAR CONTEUDO !!!!!!!!!!!!
+POST_ROSLIN=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/roslin")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# adama dá um like no post de roslin
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 8000 action "$POST_ROSLIN" --sign="$SIM/A/chaves/adama" 
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [15/01] ---
+
+#asimov faz um post -- ALTERAR CONTEUDO
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov"
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+#adama faz um post -- ALTERAR CONTEUDO!!
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [16/01] ---
+
+# asimov dá um like no post de adama
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 500 action "$POST_ADAMA" --sign="$SIM/A/chaves/asimov" 
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [17/01] ---
+
+#adama faz um post -- ALTERAR CONTEUDO!!
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# roslin dá um like no post de adama
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 500 action "$POST_ADAMA" --sign="$SIM/A/chaves/roslin" 
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [18/01] ---
+
+freechains --now="$TEMPO" --root="$SIM/B/" chains add '#videos' clone localhost:8330 # peer B inicia a chain localmente--------------------------BBBBB-------------------------------
+#freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync localhost:8330
+
+# kirk faz um beg para entrar, salvo em var para like dinâmico
+BEG_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/B/chaves/kirk")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+# asimov dá um like no beg de kirk
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 1000 action "$BEG_KIRK" --sign="$SIM/A/chaves/asimov" 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [19/01] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [20/01] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [21/01] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [22/01] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [23/01] ---
+
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [24/01] ---
+
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [25/01] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [26/01] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [27/01] ---
+
+# spock faz um beg para entrar, salvo em var para like dinâmico
+BEG_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/B/chaves/spock")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# kirk dá um like no beg de kirk
+freechains --now="$TEMPO" chain --root="$SIM/B/" '#videos' like 1000 action "$BEG_SPOCK" --sign="$SIM/B/chaves/kirk" 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [28/01] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [29/01] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [30/01] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [01/02] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [02/02] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [03/02] ---
+
+#freechains --now="$TEMPO" --root="$SIM/C/" chains add '#videos' clone localhost:8330 # peer C inicia a chain localmente --------------------------CCCCCC----------------------------
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync localhost:8330
+
+# paul faz um beg para entrar, salvo em var para like dinâmico
+BEG_PAUL=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/paul")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+# adama desconhece paul, mas como seu conteúdo parecia legítimo, o deixou entrar
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 1000 action "$BEG_PAUL" --sign="$SIM/A/chaves/adama" 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [04/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [05/02] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [06/02] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [07/02] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [08/02] ---
+
+# anakin faz um beg para entrar, salvo em var para like dinâmico
+BEG_ANAKIN=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/anakin")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+# roslin dá um like no beg de anakin
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 1000 action "$BEG_ANAKIN" --sign="$SIM/A/chaves/roslin" 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [09/02] ---
+
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [10/02] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [11/02] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [12/02] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [13/02] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [14/02] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [15/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [16/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [17/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [18/02] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [19/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [20/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [21/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [22/02] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [23/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [24/02] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [25/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [26/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [26/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [27/02] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [28/02] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [29/02] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [30/02] ---
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [01/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [02/03] ---
-freechains --now="$TEMPO" --root="$SIM/C/" chains add '#videos' clone localhost:8330 # peer C inicia a chain localmente
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [03/03] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [04/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [05/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [06/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [07/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [08/03] ---
+
+# avasarala faz um beg para entrar, salvo em var para like dinâmico
+BEG_AVASARALA=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/avasarala")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+# adama dá um like no beg de avasarala
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 1000 action "$BEG_AVASARALA" --sign="$SIM/A/chaves/adama" 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [09/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [10/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [11/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [12/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [13/03] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [14/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [15/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [16/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [17/03] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [18/03] ---
+
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [19/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [20/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [21/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [22/03] ---
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [23/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [24/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [25/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [26/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [27/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [28/03] ---
+
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [29/03] ---
+
+# hoje, nada acontece!
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [30/03] ---
+
 
 
 
@@ -159,4 +597,4 @@ TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 echo "tudo certo ate aqui!"
 # remove a pasta das chains, para testes apenas!
-#rm -rf "$SIM/A/chains" "$SIM/B/chains" "$SIM/C/chains" 
+#rm -rf "$SIM/A/chains" "$SIM/B/chains" "$SIM/C/chains"  aa
