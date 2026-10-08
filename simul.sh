@@ -26,18 +26,33 @@ freechains --version # testa se o freechains esta ok e na versao certa
 mkdir -p "$SIM/A/chains" # cria as pastas base /chains para o daemon iniciar
 mkdir -p "$SIM/B/chains"
 mkdir -p "$SIM/C/chains"
+mkdir -p "$SIM/HUB/chains"
 
-#freechains --root="$SIM/A/" daemon start --port=8330 --hub & # inicia os 3 peers no background (&)
-#freechains --root="$SIM/B/" daemon start --port=8331 --hub & # e define os diretorios de cada um
-#freechains --root="$SIM/C/" daemon start --port=8332 --hub &
+freechains --root="$SIM/A/" daemon start --port=8331 & # inicia os 3 peers no background (&)
+freechains --root="$SIM/B/" daemon start --port=8332 & # e define os diretorios de cada um
+freechains --root="$SIM/C/" daemon start --port=8333 &
+freechains --root="$SIM/HUB/" daemon start --port=8330 --hub & # hub para facilitar sync
+
+TEMPO=$(date +%s) # salva o tempo de criacao!!
+
+# !! adama cria a chain #videos 
+freechains --now="$TEMPO" --root="$SIM/A/" chains add '#videos' init --pioneer="$SIM/A/chaves/adama.pub"
+
+HUB="localhost:8330" # para facilitar a sincronização
+A="localhost:8331"
+B="localhost:8332"
+C="localhost:8333"
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chains add '#videos' clone $A # chub clona de A
+freechains --now="$TEMPO" --root="$SIM/B/" chains add '#videos' clone $HUB # B clona de hub
+freechains --now="$TEMPO" --root="$SIM/C/" chains add '#videos' clone $HUB # C clona de hub
 
 # fazer SIM="$HOME/simulacao" no terminal individual, para rodar sem o script, é necessario!!
 
-sleep 3 # espera um tempo para eles iniciarem
+sleep 2 # espera um tempo para os daemons iniciarem
 
-# !! adama cria a chain #videos ------------------------------------------------------------------------
-freechains --root="$SIM/A/" chains add '#videos' init --pioneer="$SIM/A/chaves/adama.pub"
-TEMPO=$(date +%s) # salva o tempo de criacao!!
+#------------------------------------------------------------------------
+
 # --- [01/01] ---
 
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
@@ -190,28 +205,47 @@ freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 500 action "$POS
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [18/01] ---
 
-freechains --now="$TEMPO" --root="$SIM/B/" chains add '#videos' clone localhost:8330 # peer B inicia a chain localmente--------------------------BBBBB-------------------------------
-#freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync localhost:8330
+# peer B entra na rede --------------------------BBBBB-------------------------------
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A # hub puxa de A
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB # B puxa de hub
 
 # kirk faz um beg para entrar, salvo em var para like dinâmico
 BEG_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/B/chaves/kirk")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
-# SINCRONIZAR!!!!
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B # hub puxa de B
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB # A puxa de hub
 
 # asimov dá um like no beg de kirk
-freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 1000 action "$BEG_KIRK" --sign="$SIM/A/chaves/asimov" 
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 2000 action "$BEG_KIRK" --sign="$SIM/A/chaves/asimov" 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A # hub puxa de A
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB # B puxa de hub
+
+TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# --- [19/01] ---
+
+#adama faz um post -- ALTERAR CONTEUDO!!
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 # SINCRONIZAR!!!!
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
-# --- [19/01] ---
-
-
-TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [20/01] ---
 
+#kirk faz um post -- ALTERAR CONTEUDO!!
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+# adama dá um like no post de kirk
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' like 500 action "$POST_KIRK" --sign="$SIM/A/chaves/adama" 
+
+# SINCRONIZAR!!!!
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [21/01] ---
@@ -221,29 +255,67 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [22/01] ---
 
+#kirk faz um post -- ALTERAR CONTEUDO!!
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
+# SINCRONIZAR!!!!
+
+#asimov faz um post -- ALTERAR CONTEUDO!!
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
+
+# kirk dá um like no post de asimov
+freechains --now="$TEMPO" chain --root="$SIM/B/" '#videos' like 500 action "$POST_ASIMOV" --sign="$SIM/B/chaves/kirk" 
+
+# SINCRONIZAR!!!!
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [23/01] ---
 
+# roslin faz um post -- ALTERAR CONTEUDO !!!!!!!!!!!!
+POST_ROSLIN=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/roslin")
 
-
+# SINCRONIZAR!!!!
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [24/01] ---
 
+#kirk faz um post -- ALTERAR CONTEUDO!!
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
+# SINCRONIZAR!!!!
 
+#adama faz um post -- ALTERAR CONTEUDO!!
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# SINCRONIZAR!!!!
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [25/01] ---
 
+#adama faz um post -- ALTERAR CONTEUDO!!
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
+# SINCRONIZAR!!!!
+
+# adama dá dislike no post de roslin, pois o link está quebrado
+freechains --now="$TEMPO" chain --root="$SIM/A/" '#videos' dislike 500 action "$POST_ROSLIN" --sign="$SIM/A/chaves/adama" 
+
+# SINCRONIZAR!!!!
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [26/01] ---
 
+#kirk faz um post -- ALTERAR CONTEUDO!!
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
 
+# SINCRONIZAR!!!!
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [27/01] ---
@@ -252,7 +324,9 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 BEG_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/B/chaves/spock")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
-# kirk dá um like no beg de kirk
+# SINCRONIZAR!!!!
+
+# kirk dá um like no beg de spock
 freechains --now="$TEMPO" chain --root="$SIM/B/" '#videos' like 1000 action "$BEG_SPOCK" --sign="$SIM/B/chaves/kirk" 
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
