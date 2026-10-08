@@ -19,7 +19,7 @@ Abaixo estão relacionados os usuários, sua data de ingresso e seu perfil geral
 | Presidente Roslin  | 01/01 | Soft User                |
 | Isaac Asimov       | 03/01 | Hard User, Isolado       |
 | James Kirk         | 18/01 | Regular, Generoso        |
-| Spock              | 27/01 | Avarento                 |
+| Spock              | 27/01 | Regular, Avarento        |
 | Padre Paul         | 03/02 | **Malicioso**, Enganador |
 | Anakin Skywalker   | 08/02 | Volátil, **Malicioso**   |
 | Chrisjen Avasarala | 06/03 | Free Rider               |
