@@ -43,7 +43,7 @@ A="localhost:8331"
 B="localhost:8332"
 C="localhost:8333"
 
-freechains --now="$TEMPO" --root="$SIM/HUB/" chains add '#videos' clone $A # chub clona de A
+freechains --now="$TEMPO" --root="$SIM/HUB/" chains add '#videos' clone $A # hub clona de A
 freechains --now="$TEMPO" --root="$SIM/B/" chains add '#videos' clone $HUB # B clona de hub
 freechains --now="$TEMPO" --root="$SIM/C/" chains add '#videos' clone $HUB # C clona de hub
 
@@ -358,6 +358,7 @@ TEMPO=$((TEMPO + 3600)) # avança 1 hora
 freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
 freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
+# spock faz um post -- ALTERAR CONTEUDO!!
 POST_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/spock")
 
 freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
@@ -371,6 +372,7 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [30/01] ---
 
+# roslin faz um post -- ALTERAR CONTEUDO!!
 POST_ROSLIN=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/roslin")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
