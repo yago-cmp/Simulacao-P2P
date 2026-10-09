@@ -250,8 +250,6 @@ freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' like 500 action "$POS
 freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A 
 freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
-echo "ate aqui ok???"
-
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [21/01] ---
 
@@ -352,7 +350,7 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 # --- [28/01] ---
 
 #asimov faz um post -- ALTERAR CONTEUDO!!
-POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
@@ -373,11 +371,11 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 # --- [30/01] ---
 
 # roslin faz um post -- ALTERAR CONTEUDO!!
-POST_ROSLIN=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/roslin")
+POST_ROSLIN=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/roslin")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 # roslin dá um like no post de spock
-freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' like 1000 action "$POST_SPOCK" --sign="$SIM/A/chaves/roslin" 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' like 1000 action "$POST_SPOCK" --sign="$SIM/A/chaves/roslin" 
 
 freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
 freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
@@ -385,7 +383,19 @@ freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [01/02] ---
 
+# kirk faz um post -- ALTERAR CONTEUDO!!
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
 
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# adama dá um dislike no post de kirk, que está quebrado
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' dislike 500 action "$POST_KIRK" --sign="$SIM/A/chaves/adama" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [02/02] ---
@@ -395,34 +405,69 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [03/02] ---
 
-#freechains --now="$TEMPO" --root="$SIM/C/" chains add '#videos' clone localhost:8330 # peer C inicia a chain localmente --------------------------CCCCCC----------------------------
-freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync localhost:8330
+# peer C entra na rede --------------------------CCCCCC----------------------------
 
 # paul faz um beg para entrar, salvo em var para like dinâmico
 BEG_PAUL=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/paul")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
-# SINCRONIZAR!!!!
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 # adama desconhece paul, mas como seu conteúdo parecia legítimo, o deixou entrar
 freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' like 1000 action "$BEG_PAUL" --sign="$SIM/A/chaves/adama" 
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
-# SINCRONIZAR!!!!
-
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [04/02] ---
 
+# paul faz um post malicioso -- ALTERAR CONTEUDO!!
+POST_PAUL=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/C/chaves/paul")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+#adama dá um revoke pesado no post malicioso de paul
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' revoke 1500 action "$POST_PAUL" --sign="$SIM/A/chaves/adama" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [05/02] ---
 
+# asimov faz um post -- ALTERAR CONTEUDO!!
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
 
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [06/02] ---
 
+# spock faz um post -- ALTERAR CONTEUDO!!
+POST_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/spock")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+#adama dá um like no post de spock
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' like 500 action "$POST_SPOCK" --sign="$SIM/A/chaves/adama" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
@@ -437,25 +482,39 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 BEG_ANAKIN=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/anakin")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
-# SINCRONIZAR!!!!
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 # roslin dá um like no beg de anakin
 freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' like 1000 action "$BEG_ANAKIN" --sign="$SIM/A/chaves/roslin" 
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
-# SINCRONIZAR!!!!
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [09/02] ---
 
+# anakin faz um post -- ALTERAR CONTEUDO!!!
+POST_ANAKIN=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/anakin")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [10/02] ---
 
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
 
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [11/02] ---
@@ -465,11 +524,36 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [12/02] ---
 
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [13/02] ---
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+# adama dá like no post de kirk
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' like 1000 action "$POST_KIRK" --sign="$SIM/A/chaves/adama" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
@@ -480,14 +564,30 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [15/02] ---
 
+#kirk da like no post de asimov
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' like 1000 action "$POST_ASIMOV" --sign="$SIM/B/chaves/kirk" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [16/02] ---
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [17/02] ---
 
+POST_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/spock")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [18/02] ---
@@ -497,13 +597,45 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [19/02] ---
 
+POST_ANAKIN=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/C/chaves/anakin")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [20/02] ---
 
+POST_ROSLIN=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/roslin")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+#kirk da like no post de roslin
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' like 500 action "$POST_ROSLIN" --sign="$SIM/B/chaves/kirk" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [21/02] ---
+
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
@@ -514,23 +646,46 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [23/02] ---
 
+POST_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/spock")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [24/02] ---
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
 
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [25/02] ---
 
+POST_ANAKIN=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/C/chaves/anakin")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [26/02] ---
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
 
-TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
-# --- [26/02] ---
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
+# asimov dá um dislike no post de kirk, pois o link está quebrado
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' dislike 500 action "$POST_KIRK" --sign="$SIM/A/chaves/asimov" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [27/02] ---
@@ -540,6 +695,24 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [28/02] ---
 
+# POST MALICIOSO DE ANAKIN
+POST_ANAKIN=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/C/chaves/anakin")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+#adama dá um revoke pesado no post malicioso de anakin
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' revoke 1500 action "$POST_ANAKIN" --sign="$SIM/A/chaves/adama" 
+
+#roslin dá um revoke pesado no post malicioso de anakin
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' revoke 2000 action "$POST_ANAKIN" --sign="$SIM/A/chaves/roslin" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [29/02] ---
@@ -549,18 +722,51 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [30/02] ---
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [01/03] ---
 
+POST_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/spock")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [02/03] ---
 
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [03/03] ---
 
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
 
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+POST_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/spock")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [04/03] ---
@@ -570,14 +776,44 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [05/03] ---
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [06/03] ---
 
+POST_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/spock")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# asimov dá um like no post de spock
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' like 500 action "$POST_SPOCK" --sign="$SIM/A/chaves/asimov" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [07/03] ---
 
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [08/03] ---
@@ -586,17 +822,33 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 BEG_AVASARALA=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/avasarala")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
-# SINCRONIZAR!!!!
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 # adama dá um like no beg de avasarala
 freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' like 1000 action "$BEG_AVASARALA" --sign="$SIM/A/chaves/adama" 
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
-# SINCRONIZAR!!!!
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [09/03] ---
 
+POST_AVASARALA=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/avasarala")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [10/03] ---
@@ -606,6 +858,17 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [11/03] ---
 
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [12/03] ---
@@ -615,7 +878,11 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [13/03] ---
 
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
 
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [14/03] ---
@@ -625,6 +892,11 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [15/03] ---
 
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [16/03] ---
@@ -634,12 +906,24 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [17/03] ---
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [18/03] ---
 
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
 
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [19/03] ---
@@ -649,6 +933,11 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [20/03] ---
 
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [21/03] ---
@@ -658,9 +947,29 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [22/03] ---
 
+POST_SPOCK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/spock")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+
+
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [23/03] ---
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
+
+# kirk dá um like no piost de spock
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' like 1000 action "$POST_SPOCK" --sign="$SIM/B/chaves/kirk" 
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [24/03] ---
@@ -670,10 +979,20 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [25/03] ---
 
+POST_ASIMOV=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/asimov")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [26/03] ---
 
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [27/03] ---
@@ -683,6 +1002,12 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [28/03] ---
 
+POST_KIRK=$(freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/B/chaves/kirk")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $B
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [29/03] ---
@@ -692,18 +1017,24 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [30/03] ---
 
+POST_ADAMA=$(freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' post inline $'{"titulo": "Gatinhos muito fofos brincando", "tags": ["gatos", "filhotes", "engraçado", "animais", "pets", "meow"], "link": "www.youtube.com/watch?v=catmock001"}' --sign="$SIM/A/chaves/adama")
+
+freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
+freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
+freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
+
+echo "final!!!"
+
+# TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
+# TEMPO=$((TEMPO + 43200)) # avança 12 horas
+# TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 
 
 
-TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
-TEMPO=$((TEMPO + 43200)) # avança 12 horas
-TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
-# fecha os programas e as portas
+# fechar os programas e as portas
 #pkill -9 freechains
 #pkill -9 git-daemon
-
-echo "tudo certo ate aqui!"
 # remove a pasta das chains, para testes apenas!
-#rm -rf "$SIM/A/chains" "$SIM/B/chains" "$SIM/C/chains"  aa
+#rm -rf "$SIM/A/chains" "$SIM/B/chains" "$SIM/C/chains" "$SIM/HUB/chains"  
