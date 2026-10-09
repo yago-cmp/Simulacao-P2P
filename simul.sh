@@ -435,7 +435,7 @@ freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 #adama dá um revoke pesado no post malicioso de paul
-freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' revoke 1500 action "$POST_PAUL" --sign="$SIM/A/chaves/adama" 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' revoke 1500 "$POST_PAUL" --sign="$SIM/A/chaves/adama" 
 
 freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
 freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' sync recv $HUB 
@@ -499,7 +499,7 @@ TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recupe
 # --- [09/02] ---
 
 # anakin faz um post -- ALTERAR CONTEUDO!!!
-POST_ANAKIN=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/anakin")
+POST_ANAKIN=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --sign="$SIM/C/chaves/anakin")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
@@ -705,10 +705,10 @@ freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' sync recv $HUB
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 #adama dá um revoke pesado no post malicioso de anakin
-freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' revoke 1500 action "$POST_ANAKIN" --sign="$SIM/A/chaves/adama" 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' revoke 1500 "$POST_ANAKIN" --sign="$SIM/A/chaves/adama" 
 
 #roslin dá um revoke pesado no post malicioso de anakin
-freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' revoke 2000 action "$POST_ANAKIN" --sign="$SIM/A/chaves/roslin" 
+freechains --now="$TEMPO" --root="$SIM/A/" chain '#videos' revoke 2000 "$POST_ANAKIN" --sign="$SIM/A/chaves/roslin" 
 
 freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $A
 freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB 
@@ -837,7 +837,7 @@ freechains --now="$TEMPO" --root="$SIM/B/" chain '#videos' sync recv $HUB
 TEMPO=$((TEMPO + 86400)) # avança 24 horas, os posts se consolidam, reps recuperados
 # --- [09/03] ---
 
-POST_AVASARALA=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --beg --sign="$SIM/C/chaves/avasarala")
+POST_AVASARALA=$(freechains --now="$TEMPO" --root="$SIM/C/" chain '#videos' post inline $'{"titulo": "Compilação de miados engraçados", "tags": ["gatos", "miado", "fofos", "brincadeira", "felinos", "comedia"], "link": "www.vimeo.com/catmock002"}' --sign="$SIM/C/chaves/avasarala")
 TEMPO=$((TEMPO + 3600)) # avança 1 hora
 
 freechains --now="$TEMPO" --root="$SIM/HUB/" chain '#videos' sync recv $C
