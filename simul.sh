@@ -1,6 +1,8 @@
 #!/bin/bash
 
 SIM="$HOME/simulacao" #define path padrao pro projeto, /tmp é irreal
+pkill -9 freechains
+rm -rf "$SIM/A/chains" "$SIM/B/chains" "$SIM/C/chains" "$SIM/HUB/chains"
 
 # as chaves de cada nó ficam em cada nó!!
 mkdir -p "$SIM/A/chaves" # cria diretorios para os 3 peers
